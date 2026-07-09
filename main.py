@@ -1,6 +1,10 @@
 import tkinter as tk
 
+from tkinter import simpledialog
+
 janela = tk.Tk()
+
+compromissos = []
 
 janela.title("Routine Manager")
 
@@ -37,6 +41,38 @@ lista_compromissos.pack(
     pady=20
 )
 
+
+def atualizar_lista():
+
+    for widget in lista_compromissos.winfo_children():
+        widget.destroy()
+
+    for compromisso in compromissos:
+
+        texto = tk.Label(
+            lista_compromissos,
+            text="☐ " + compromisso,
+            font=("Sagoe UI", 14),
+            bg="white",
+            anchor="w"
+        )
+
+        texto.pack(fill="x", pady=2)
+
+def adicionar_compromisso():
+
+    nome = simpledialog.askstring(
+        "Novo compromisso",
+        "Digite o nome do compromisso:"
+    )
+
+    if nome:
+
+        compromissos.append(nome)
+
+        atualizar_lista()
+
+
 barra_botoes = tk.Frame(
     frame_principal,
     bg="white"
@@ -47,7 +83,8 @@ barra_botoes.pack(fill="x")
 botao_adicionar = tk.Button(
     barra_botoes,
     text="Adicionar",
-    width=15
+    width=15,
+    command=adicionar_compromisso
 )
 
 botao_remover = tk.Button(
