@@ -1,5 +1,5 @@
 import sqlite3
-
+from datetime import datetime
 
 class Database:
 
@@ -19,6 +19,22 @@ class Database:
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                                 
                     nome TEXT NOT NULL
+                )
+            """)
+
+            self.conexao.commit()
+
+            self.cursor.execute("""
+                CREATE TABLE IF NOT EXISTS registros (
+                                
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                
+                    compromisso_id INTEGER NOT NULL,
+                                
+                    data TEXT NOT NULL,
+                                
+                    FOREIGN KEY (compromisso_id)
+                    REFERENCES compromissos (id)
                 )
             """)
 
@@ -58,3 +74,20 @@ class Database:
          )
 
          self.conexao.commit()
+
+    def registrar_conclusao(self, id_compromisso):
+         
+        data = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                                        
+        self.cursor.execute(
+             """
+            INSERT INTO registros(
+                compromisso_id,
+                data
+            )
+            VALUES (?, ?)
+             """,
+            (id_compromisso, data)
+        )
+
+        self.conexao.commit()

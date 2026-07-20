@@ -4,6 +4,7 @@ from tkinter import simpledialog
 from database.database import Database
 
 
+
 class Home:
 
     def __init__(self, janela):
@@ -88,7 +89,8 @@ class Home:
         self.botao_marcar = tk.Button(
             self.barra_botoes,
             text="Marcar como feito",
-            width=18
+            width=18,
+            command=self.concluir_compromisso
         )
 
         self.botao_marcar.pack(side="left", padx=5)
@@ -144,3 +146,14 @@ class Home:
         self.db.remover_compromisso(id_compromisso)
 
         self.carregar_compromissos()
+
+    def concluir_compromisso(self):
+
+        selecionado = self.tabela.selection()
+
+        if not selecionado:
+            return
+        
+        id_compromisso = int(selecionado[0])
+
+        self.db.registrar_conclusao(id_compromisso)
