@@ -46,3 +46,15 @@ class Database:
             """
         )
         return self.cursor.fetchall()
+    
+    def remover_compromisso(self, id_compromisso):
+         
+         self.cursor.execute(
+              """
+              DELETE FROM compromissos
+              WHERE id = ?
+              """,
+              (id_compromisso,)
+         )
+
+         self.conexao.commit()

@@ -79,7 +79,8 @@ class Home:
         self.botao_remover = tk.Button(
             self.barra_botoes,
             text="Remover",
-            width=15
+            width=15,
+            command=self.remover_compromisso
         )
 
         self.botao_remover.pack(side="left", padx=5)
@@ -131,3 +132,15 @@ class Home:
 
            self.carregar_compromissos()
             
+    def remover_compromisso(self):
+
+        selecionado = self.tabela.selection()
+
+        if not selecionado:
+            return
+        
+        id_compromisso = int(selecionado[0])
+
+        self.db.remover_compromisso(id_compromisso)
+
+        self.carregar_compromissos()
