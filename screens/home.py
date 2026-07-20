@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import simpledialog
+from database.database import Database
 
 
 class Home:
@@ -8,6 +9,8 @@ class Home:
     def __init__(self, janela):
 
         self.janela = janela
+
+        self.db = Database()
 
         self.compromissos = []
 
@@ -97,6 +100,23 @@ class Home:
 
         self.botao_excel.pack(side="left", padx=5)
 
+        self.carregar_compromissos()
+
+    def carregar_compromissos(self):
+
+        for item in self.tabela.get_children():
+            self.tabela.delete(item)
+
+        compromissos = self.db.listar_compromissos()
+
+        for compromisso in compromissos:
+
+            self.tabela.insert(
+                "",
+                "end",
+                iid=compromisso[0],
+                values=(compromisso[1],)
+            )
 
     def adicionar_compromisso(self):
 
@@ -107,10 +127,7 @@ class Home:
 
         if nome:
 
-            self.compromissos.append(nome)
-            self.tabela.insert(
-                "",
-                "end",
-                values=(nome,)
-            )
+           self.db.adicionar_compromisso(nome)
+
+           self.carregar_compromissos()
             
