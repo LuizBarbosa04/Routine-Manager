@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 from tkinter import simpledialog
 
 
@@ -33,12 +34,24 @@ class Home:
 
         self.titulo.pack(anchor="w")
 
-        self.lista_compromissos = tk.Frame(
+        self.tabela = ttk.Treeview(
             self.frame_principal,
-            bg="white"
+            columns=("Compromisso",),
+            show="headings",
+            height=20
         )
 
-        self.lista_compromissos.pack(
+        self.tabela.heading(
+            "Compromisso",
+            text="Compromissos"
+        )
+
+        self.tabela.column(
+            "Compromisso",
+            width=900
+        )
+
+        self.tabela.pack(
             fill="both",
             expand=True,
             pady=20
@@ -84,22 +97,6 @@ class Home:
 
         self.botao_excel.pack(side="left", padx=5)
 
-    def atualizar_lista(self):
-
-        for widget in self.lista_compromissos.winfo_children():
-            widget.destroy()
-
-        for compromisso in self.compromissos:
-
-            texto = tk.Label(
-                self.lista_compromissos,
-                text="☐ " + compromisso,
-                font=("Segoe UI", 14),
-                bg="white",
-                anchor="w"
-            )
-
-            texto.pack(fill="x", pady=2)
 
     def adicionar_compromisso(self):
 
@@ -109,5 +106,11 @@ class Home:
         )
 
         if nome:
+
             self.compromissos.append(nome)
-            self.atualizar_lista()
+            self.tabela.insert(
+                "",
+                "end",
+                values=(nome,)
+            )
+            
