@@ -40,19 +40,38 @@ class Home:
 
         self.tabela = ttk.Treeview(
             self.frame_principal,
-            columns=("Compromisso",),
+            columns=("Nome", "Última", "Total"),
             show="headings",
             height=20
         )
 
+        self.tabela.heading("Nome", text="Compromisso")
+
         self.tabela.heading(
-            "Compromisso",
-            text="Compromissos"
+            "Última",
+            text="Última conclusão"
+        )
+
+        self.tabela.heading(
+            "Total",
+            text="Total"
         )
 
         self.tabela.column(
-            "Compromisso",
-            width=900
+            "Nome",
+            width=500,
+        )
+
+        self.tabela.column(
+            "Última",
+            width=200,
+            anchor="center"
+        )
+
+        self.tabela.column(
+            "Total",
+            width=100,
+            anchor="center"
         )
 
         self.tabela.pack(
@@ -110,15 +129,27 @@ class Home:
         for item in self.tabela.get_children():
             self.tabela.delete(item)
 
-        compromissos = self.db.listar_compromissos()
+        dados = self.db.listar_estatisticas()
 
-        for compromisso in compromissos:
+        for linha in dados:
+            
+            id_compromisso = linha[0]
+            nome = linha[1]
+            ultima = linha[2]
+            total = linha[3]
+
+            if ultima is None:
+                ultima = "-"
 
             self.tabela.insert(
                 "",
                 "end",
-                iid=compromisso[0],
-                values=(compromisso[1],)
+                iid=id_compromisso,
+                values=(
+                    nome,
+                    ultima,
+                    total
+                )
             )
 
     def adicionar_compromisso(self):
@@ -157,3 +188,4 @@ class Home:
         id_compromisso = int(selecionado[0])
 
         self.db.registrar_conclusao(id_compromisso)
+        self.carregar_compromissos()

@@ -31,10 +31,11 @@ class Database:
                 
                     compromisso_id INTEGER NOT NULL,
                                 
-                    data TEXT NOT NULL,
+                    data DATETIME NOT NULL,
                                 
                     FOREIGN KEY (compromisso_id)
-                    REFERENCES compromissos (id)
+                        REFERENCES compromissos (id)
+                        ON DELETE CASCADE
                 )
             """)
 
@@ -91,3 +92,23 @@ class Database:
         )
 
         self.conexao.commit()
+
+    def listar_estatisticas(self):
+         
+         self.cursor.execute("""
+            SELECT 
+                c.id,
+                c.nome,
+                MAX(r.data),
+                COUNT(r.id)
+            FROM compromissos c
+                             
+            LEFT JOIN registros r
+                ON c.id = r.compromisso_id
+                    
+            GROUP BY c.id, c.nome
+                             
+            ORDER BY c.nome 
+        """)
+         
+         return self.cursor.fetchall()
